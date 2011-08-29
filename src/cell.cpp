@@ -19,6 +19,22 @@ bool Cell::isWall(int dir)
   return false;
 }
 
+bool Cell::isDoor(int dir)
+{
+  if (dir == NORTH)
+    return doorN;
+  if (dir == SOUTH)
+    return doorS;
+  if (dir == EAST)
+    return doorE;
+  if (dir == WEST)
+    return doorW;
+
+  return false;
+}
+
+
+
 void Cell::SetWall(int wall)
 {
   if (wall == NORTH) {
@@ -35,6 +51,26 @@ void Cell::SetWall(int wall)
   }
   if (wall == WEST) {
     wallW = true;
+    return;
+  }
+}
+
+void Cell::SetDoor(int door)
+{
+  if (door == NORTH) {
+    doorN = true;
+    return;
+  }
+  if (door == SOUTH) {
+    doorS = true;
+    return;
+  }
+  if (door == EAST) {
+    doorE = true;
+    return;
+  }
+  if (door == WEST) {
+    doorW = true;
     return;
   }
 }

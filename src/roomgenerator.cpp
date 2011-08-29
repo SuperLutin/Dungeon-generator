@@ -16,6 +16,17 @@ RoomGenerator::RoomGenerator(int minnb, int maxnb,
   }
 }
 
+void RoomGenerator::AddRoomList(int x, int y, int w, int h)
+{
+  RoomList newroom;
+  newroom.x = x;
+  newroom.y = y;
+  newroom.w = w;
+  newroom.h = h;
+
+  roomlist.push_back(newroom);
+}
+
 int RoomGenerator::RoomPlaceCount(Cell **map, int x, int y, int maxx, int maxy)
 {
   int val = 0;
@@ -56,6 +67,107 @@ int RoomGenerator::RoomPlaceCount(Cell **map, int x, int y, int maxx, int maxy)
   } else val += 11;
   return val;
 } 
+
+void RoomGenerator::ChooseDoor(std::list<Node> DoorNode, Cell **map, int dir)
+{
+  if (DoorNode.size() == 0)
+    return;
+
+  int n = rand()% DoorNode.size();
+  std::list<Node>::iterator it = DoorNode.begin();
+  std::advance(it, n);
+  switch (dir) {
+    case NORTH:
+      map[it->x][it->y].GetCell()->DelWall(NORTH);
+      map[it->x][it->y].GetCell()->SetDoor(NORTH);
+      map[it->x][it->y - 1].GetCell()->DelWall(SOUTH);
+      map[it->x][it->y - 1].GetCell()->SetDoor(SOUTH);
+      return;
+    case SOUTH:
+      map[it->x][it->y].GetCell()->DelWall(SOUTH);
+      map[it->x][it->y].GetCell()->SetDoor(SOUTH);
+      map[it->x][it->y + 1].GetCell()->DelWall(NORTH);
+      map[it->x][it->y + 1].GetCell()->SetDoor(NORTH);
+      return;
+    case WEST:
+      map[it->x][it->y].GetCell()->DelWall(WEST);
+      map[it->x][it->y].GetCell()->SetDoor(WEST);
+      map[it->x - 1][it->y].GetCell()->DelWall(EAST);
+      map[it->x - 1][it->y].GetCell()->SetDoor(EAST);
+      return;
+    case EAST:
+      map[it->x][it->y].GetCell()->DelWall(EAST);
+      map[it->x][it->y].GetCell()->SetDoor(EAST);
+      map[it->x + 1][it->y].GetCell()->DelWall(WEST);
+      map[it->x + 1][it->y].GetCell()->SetDoor(WEST);
+      return;
+  }
+}
+
+void RoomGenerator::PlaceDoors(Cell **map, int maxx, int maxy)
+{
+  while (!roomlist.empty()) {
+    RoomList roomcur = roomlist.back(); 
+    int j = roomcur.y;
+    if (j != 0) {
+      std::list<Node> DoorNode;
+      for (int i = roomcur.x; i < roomcur.x+roomcur.w; ++i) {
+        if (map[i][j - 1].GetCell()->GetType() == DIRT) {
+          Node tmpnode;
+          tmpnode.x = i;
+          tmpnode.y = j;
+          DoorNode.push_front(tmpnode);
+        }
+      }
+      ChooseDoor(DoorNode, map, NORTH);
+      DoorNode.clear();
+    }
+    j = roomcur.y + roomcur.h - 1;
+    if (j != maxy) {
+      std::list<Node> DoorNode;
+      for (int i = roomcur.x; i < roomcur.x+roomcur.w; ++i) {
+        if (map[i][j + 1].GetCell()->GetType() == DIRT) {
+          Node tmpnode;
+          tmpnode.x = i;
+          tmpnode.y = j;
+          DoorNode.push_front(tmpnode);
+        } 
+      }
+      ChooseDoor(DoorNode, map, SOUTH);
+      DoorNode.clear();
+    }
+    int i = roomcur.x;
+    if (i != 0) {
+      std::list<Node> DoorNode;
+      for (int j = roomcur.y; j < roomcur.y + roomcur.h; ++j) {
+        if (map[i-1][j].GetCell()->GetType() == DIRT) {
+          Node tmpnode;
+          tmpnode.x = i;
+          tmpnode.y = j;
+          DoorNode.push_front(tmpnode);
+        }
+      }
+      ChooseDoor(DoorNode, map, WEST);
+      DoorNode.clear();
+    }
+    i = roomcur.x + roomcur.w - 1;
+    if (i != maxx) {
+      std::list<Node> DoorNode;
+      for (int j = roomcur.y; j < roomcur.y + roomcur.h; ++j) {
+        if (map[i+1][j].GetCell()->GetType() == DIRT) {
+          Node tmpnode;
+          tmpnode.x = i;
+          tmpnode.y = j;
+          DoorNode.push_front(tmpnode);
+        }
+      }
+      ChooseDoor(DoorNode, map, EAST);
+      DoorNode.clear();
+    }
+    roomlist.pop_back();
+  }
+  roomlist.clear();
+}
 
 void RoomGenerator::SearchPlace(Maze &maze)
 {
@@ -101,9 +213,11 @@ void RoomGenerator::SearchPlace(Maze &maze)
       std::list<Node>::iterator it = listrooms.begin();
       std::advance(it, n);
       maze.PlaceRoom(it->x, it->y, roomW, roomH);
+      AddRoomList(it->x, it->y, roomW, roomH);
       listrooms.clear();
       rooms.erase(rooms.begin());
     }
   }
   rooms.clear();
+  PlaceDoors(maze.GetMaze(), maxx, maxy);
 }

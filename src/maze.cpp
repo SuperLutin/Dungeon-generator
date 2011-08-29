@@ -303,10 +303,14 @@ void Maze::WriteDungeon()
         if (map[i][j].GetCell()->isVisited()) {
           if (map[i][j].GetCell()->isWall(SOUTH))
             donjon << '_';
+          else if (map[i][j].GetCell()->isDoor(SOUTH))
+             donjon << ' ';
           else
             donjon << ' '; 
           if (map[i][j].GetCell()->isWall(EAST))
             donjon << '|';
+          else if (map[i][j].GetCell()->isDoor(EAST))
+             donjon << ' ';
           else
             donjon << ' '; 
         }// else if (map[i][j].GetCell()->GetType() == ROOM)
