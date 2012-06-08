@@ -10,6 +10,11 @@ RoomGenerator::RoomGenerator(int minnb, int maxnb,
                              int minW, int maxW,
                              int minH, int maxH)
 {
+  if (maxnb == 0)
+  {
+    nbroom = 0;
+	 return;
+  }
   nbroom = rand()%maxnb + minnb;
   for (int i = 0; i != nbroom; ++i) {
     rooms.push_back(Room(minW, maxW, minH, maxH));

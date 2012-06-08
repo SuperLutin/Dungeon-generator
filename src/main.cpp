@@ -52,11 +52,11 @@ int main(int argc, char* argv[])
     std::cerr << "Loopness must be between 0 and 100." << std::endl;
     return -1;
   }
-  if ( maxwidth > x || maxwidth <= minwidth) {
+  if ( maxwidth > x || maxwidth < minwidth) {
     std::cerr << "There is a problem with room's width" << std::endl;
     return -1;
   }
-  if ( maxheight > y || maxheight <= minheight) {
+  if ( maxheight > y || maxheight < minheight) {
     std::cerr << "There is a problem with room's height" << std::endl;
     return -1;
   }

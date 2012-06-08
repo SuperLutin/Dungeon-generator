@@ -1,0 +1,16 @@
+A dungeon generator
+
+.config file:
+
+x = dungeon width
+y = dungeon height
+randomness = 0 for a maximum random corridors
+sparseness = 100 for all used, 0 for a collapsed maze
+loopness = persentage of lopp in the maze
+minroom = minimum number of room
+maxroom = maximum number of room
+minwidth = minimum width of room
+maxwidth = maximum width of room
+minheight = minimum height of room
+maxheight = maximum height of room
+

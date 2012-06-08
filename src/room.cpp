@@ -4,8 +4,16 @@
 
 Room::Room(int minW, int maxW, int minH, int maxH)
 {
-  roomW = rand()%(maxW - minW) + minW;
-  roomH = rand()%(maxH - minH) + minH;
+  if (minW == maxW)
+  {
+    roomW = minW;
+    roomH = minW;
+  }
+  else
+  {
+    roomW = rand()%(maxW - minW) + minW;
+    roomH = rand()%(maxH - minH) + minH;
+  }
 }
 
 Room::Room(int w, int h)

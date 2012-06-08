@@ -1,12 +1,12 @@
 CC = g++
-CFLAGS = -O3 -Wall -Wextra -W -pedantic -pipe -ffast-math -fforce-addr -march=native -fomit-frame-pointer -finline-functions -funroll-loops -funsafe-loop-optimizations -combine 
+CFLAGS = -O3 -Wall -Wextra -W -pedantic -pipe -ffast-math -fforce-addr -march=native -fomit-frame-pointer -finline-functions -funroll-loops -funsafe-loop-optimizations 
 
 LDFLAGS =
 
 SRC = $(wildcard *.cpp)
 OBJ = $(SRC:.cpp=.o)
 
-ifeq ($(ARG),debug)
+ifdef DEBUG
 	CFLAGS += -g
 endif
 
@@ -24,3 +24,6 @@ main.o: config.h
 
 clean :
 	rm -f *.o $(EXEC)
+
+re :
+	make clean && make
