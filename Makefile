@@ -1,10 +1,15 @@
 CC = g++
-CFLAGS = -O3 -Wall -Wextra -W -pedantic -pipe -ffast-math -fforce-addr -march=native -fomit-frame-pointer -finline-functions -funroll-loops -funsafe-loop-optimizations 
+CFLAGS = -O3 -Isrc -Wall -Wextra -W -pedantic -pipe -ffast-math -fforce-addr -march=native -fomit-frame-pointer -finline-functions -funroll-loops -funsafe-loop-optimizations 
+
+.SUFFIXES : .o .cpp
 
 LDFLAGS =
 
-SRC = $(wildcard *.cpp)
-OBJ = $(SRC:.cpp=.o)
+SRCDIR=src/
+OBJDIR=obj/
+
+SRC_BASE = $(wildcard $(SRCDIR)*/*.cpp $(SRCDIR)*.cpp)
+OBJ_BASE = $(patsubst $(SRCDIR)%.cpp, $(OBJDIR)%.o, $(SRC_BASE))
 
 ifdef DEBUG
 	CFLAGS += -g
@@ -14,12 +19,12 @@ EXEC=dungeon
 
 all: $(EXEC)
 
-$(EXEC): $(OBJ)
-	$(CC) -o $@ $^ $(LDFLAGS) 
+$(EXEC) : $(OBJ_BASE)
+	mkdir -p $(@D)
+	$(CC) -o $@ $(OBJ_BASE) $(LDFLAGS) 
 
-main.o: config.h
-
-%.o: %.cpp
+$(OBJDIR)%.o : $(SRCDIR)%.cpp
+	mkdir -p $(@D)
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 clean :
