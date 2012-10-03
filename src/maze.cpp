@@ -29,21 +29,21 @@ Maze::~Maze()
 
 int Maze::ChooseDir(int x, int y, int dir)
 {
-  int N = 0;
-  int S = 0;
-  int E = 0;
-  int W = 0;
+  bool N = false;
+  bool S = false;
+  bool E = false;
+  bool W = false;
 
   if ((x == 0) || map[x-1][y].GetCell()->isVisited())
-    W = 1;
+    W = true;
   if ((y == 0) || map[x][y-1].GetCell()->isVisited())
-    N = 1;
+    N = true;
   if ((x == (maxx - 1)) || map[x+1][y].GetCell()->isVisited())
-    E = 1;
+    E = true;
   if ((y == (maxy - 1)) || map[x][y+1].GetCell()->isVisited())
-    S = 1;
+    S = true;
 
-  if (N == 1 &&  S == 1 && E == 1 && W == 1)
+  if (N &&  S && E  && W)
     return -1;
 
   int nextdir = rand()%100;
@@ -59,13 +59,13 @@ int Maze::ChooseDir(int x, int y, int dir)
   dir = -1;
   do {
     nextdir = rand()%4;
-    if (nextdir == NORTH && N == 0)
+    if (nextdir == NORTH && !N)
       dir = NORTH;
-    else if (nextdir == SOUTH && S == 0)
+    else if (nextdir == SOUTH && !S)
       dir = SOUTH;
-    else if (nextdir == EAST && E == 0)
+    else if (nextdir == EAST && !E)
       dir = EAST;
-    else if (nextdir == WEST && W == 0)
+    else if (nextdir == WEST && !W)
       dir = WEST;
   } while (dir == -1);
   return dir;
@@ -73,21 +73,21 @@ int Maze::ChooseDir(int x, int y, int dir)
 
 int Maze::ChooseDig(int x, int y, int dir)
 {
-  int N = 0;
-  int S = 0;
-  int E = 0;
-  int W = 0;
+  bool N = false;
+  bool S = false;
+  bool E = false;
+  bool W = false;
 
   if ((x == 0) || !map[x][y].GetCell()->isWall(WEST))
-    W = 1;
+    W = true;
   if ((y == 0) || !map[x][y].GetCell()->isWall(NORTH))
-    N = 1;
+    N = true;
   if (x == (maxx - 1) || !map[x][y].GetCell()->isWall(EAST))
-    E = 1;
+    E = true;
   if (y == (maxy - 1) || !map[x][y].GetCell()->isWall(SOUTH))
-    S = 1;
+    S = true;
 
-  if (N == 1 &&  S == 1 && E == 1 && W == 1)
+  if (N &&  S && E && W)
     return -1;
 
   int nextdir = rand()%100;
@@ -102,13 +102,13 @@ int Maze::ChooseDig(int x, int y, int dir)
   dir = -1;
   do {
     nextdir = rand()%4;
-    if (nextdir == NORTH && N == 0)
+    if (nextdir == NORTH && !N)
       dir = NORTH;
-    else if (nextdir == SOUTH && S == 0)
+    else if (nextdir == SOUTH && !S)
       dir = SOUTH;
-    else if (nextdir == EAST && E == 0)
+    else if (nextdir == EAST && !E)
       dir = EAST;
-    else if (nextdir == WEST && W == 0)
+    else if (nextdir == WEST && !W)
       dir = WEST;
   } while (dir == -1);
   return dir;
