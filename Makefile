@@ -1,4 +1,8 @@
+ifdef WINDOWS
+CC = i586-mingw32msvc-g++
+else
 CC = g++
+endif
 CFLAGS = -O3 -Isrc -Wall -Wextra -W -pedantic -pipe -ffast-math -fforce-addr -march=native -fomit-frame-pointer -finline-functions -funroll-loops -funsafe-loop-optimizations 
 
 .SUFFIXES : .o .cpp
@@ -28,7 +32,7 @@ $(OBJDIR)%.o : $(SRCDIR)%.cpp
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 clean :
-	rm -f *.o $(EXEC)
+	rm -f $(OBJDIR)*.o $(EXEC)
 
 re :
 	make clean && make
